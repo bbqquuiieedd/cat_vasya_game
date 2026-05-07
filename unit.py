@@ -9,6 +9,8 @@ class Unit(ABC):
         self.wisdom = wisdom
         self.intelligence = intelligence
         self.charisma = charisma
+        self.spells = []
+        self.mana = 0
 
     @abstractmethod
     def calculate_max_health(self):
@@ -21,3 +23,15 @@ class Unit(ABC):
     @abstractmethod
     def calculate_defense(self):
         pass
+
+    def add_spell(self, spell):
+        self.spells.append(spell)
+
+    def cast_spell(self, index):
+        if index < 0 or index >= len(self.spells):
+            raise IndexError("Заклинание не найдено")
+        spell = self.spells[index]
+        if self.mana < spell.mana_cost:
+            raise ValueError("Недостаточно маны")
+        self.mana -= spell.mana_cost
+        return spell.cast()
